@@ -1,0 +1,6 @@
+# Run.jl
+
+Tools for running simulations at scale
+
+- Hyper Parameter Sweeping
+- Interaction with Slurm

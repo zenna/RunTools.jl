@@ -1,8 +1,11 @@
-"Module for dispatching jobs / params stuff that kinda stuff"
-module Run
+"Module for optimization dispatching jobs / params stuff that kinda stuff"
+module RunTools
 using ArgParse
+using ProgressMeter
 
-include("dispatch.jl")
-include("misc.jl")
-include("opt.jl")
+include("dispatch.jl")  # Dispatch Jobs
+include("misc.jl")      # Miscellaneous
+include("cmd.jl")       # Command Line Argument Parsing
+include("generator.jl") # Generators
+include("optim/Optim.jl") # Generators
 end

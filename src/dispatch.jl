@@ -1,15 +1,15 @@
 "Dispatch many runs"
 function dispatchmany(φs, sim, ignoreexceptions = false)
   @showprogress 1 "Computing..." for φ in φs
-  try
-    dispatchruns(φ...)
-  catch y
-    φ[:threw_exception] = true
-    println("Exception caught: $y")
-    println("continuing to next run")
-  end
+    try
+      dispatchruns(φ...)
+    catch y
+      φ[:threw_exception] = true
+      println("Exception caught: $y")
+      println("continuing to next run")
+    end
+  end 
 end
-
 
 """
 Run (or schedule to run) `sim` with params `φ`

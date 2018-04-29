@@ -7,10 +7,10 @@ function stdargs()
         help = "Name of job"
         arg_type = Int
         default = 0
-    "--log_dir"
+    "--logdir"
         help = "Path to store data"
         action = :store_true
-    "--resume_path"
+    "--resumepath"
         help = "Path to resume parameters from"
         required = true
     "--nocuda"

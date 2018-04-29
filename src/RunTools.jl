@@ -8,4 +8,10 @@ include("misc.jl")      # Miscellaneous
 include("cmd.jl")       # Command Line Argument Parsing
 include("generator.jl") # Generators
 include("optim/Optim.jl") # Generators
+
+export dispatchmany,
+       dispatchruns,
+       randrunname,
+       logdir,
+       datadir
 end

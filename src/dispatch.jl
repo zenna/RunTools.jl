@@ -1,9 +1,10 @@
 "Dispatch many runs"
-function dispatchmany(φs, sim, ignoreexceptions = false)
+function dispatchmany(sim, φs; ignoreexceptions = false, kwargs...)
   @showprogress 1 "Computing..." for φ in φs
     try
-      dispatchruns(φ...)
+      dispatchruns(sim, φ; kwargs...)
     catch y
+      !ignoreexceptions && rethrow(y)
       φ[:threw_exception] = true
       println("Exception caught: $y")
       println("continuing to next run")
@@ -11,6 +12,11 @@ function dispatchmany(φs, sim, ignoreexceptions = false)
   end 
 end
 
+
+# Options
+# 1. Only pass in varphi. Problem is all arguments are hidden
+# 2. Only pass in kwargs. Problem is want to pass φ to sim
+# 3. Do both, what about inconsistencies
 """
 Run (or schedule to run) `sim` with params `φ`
 
@@ -18,17 +24,16 @@ Run (or schedule to run) `sim` with params `φ`
 - run `sim(opt)` locally in this process (if `runnow==true`)
 - schedule a job on slurm with sbatch (if `runsbatch==true`)
 """
-function dispatchruns(φs,
-                      sim,
-                      runlocal = false,
-                      runsbatch = false,
-                      runnow = false,
-                      runpath = joinpath(Pkg.dir("RunTools", "src", "run.sh")))
-  # Create logdir
-  mkpath(logdir_)
-
-  # Save the param file 
-  optpath = joinpath(logdir_, "$runname_.rd")
+function dispatchruns(sim,
+                      φ;
+                      runfile = φ[:runfile],
+                      logdir = get(φ, :logdir, false),
+                      runlocal = get(φ, :runlocal, false),
+                      runsbatch = get(φ, :runsbatch, false),
+                      runnow = get(φ, :runnow, false),
+                      runpath = get(φ, :runpath, joinpath(Pkg.dir("RunTools", "src", "run.sh"))))
+  mkpath(logdir)    # Create logdir
+  optpath = joinpath(logdir, "$runname_.rd")    # Save the param file 
 
   # Schedule job using sbatch
   if runsbatch
@@ -44,6 +49,6 @@ function dispatchruns(φs,
   end
   # Run right now on this process
   if runnow
-    sim(opt)
+    sim(φ)
   end
 end

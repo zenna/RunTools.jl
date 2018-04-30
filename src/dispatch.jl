@@ -1,15 +1,25 @@
 "Dispatch many runs"
 function dispatchmany(sim, φs; ignoreexceptions = false, kwargs...)
-  @showprogress 1 "Computing..." for φ in φs
-    try
-      dispatchruns(sim, φ; kwargs...)
-    catch y
-      !ignoreexceptions && rethrow(y)
-      φ[:threw_exception] = true
-      println("Exception caught: $y")
-      println("continuing to next run")
-    end
-  end 
+  if get(φs, :runlocal. false)
+    queue()
+  else
+    @showprogress 1 "Computing..." for φ in φs
+      try
+        dispatchruns(sim, φ; kwargs...)
+      catch y
+        !ignoreexceptions && rethrow(y)
+        φ[:threw_exception] = true
+        println("Exception caught: $y")
+        println("continuing to next run")
+      end
+    end 
+  end
+end
+
+function dry(f, verbose=true)
+  function dryf(args...; kwargs...)
+    verbose && println("Dry run of $f called with args: $args and kwargs $kwargs")
+  end
 end
 
 """
@@ -27,25 +37,31 @@ function dispatchruns(sim,
                       runlocal = get(φ, :runlocal, false),
                       runsbatch = get(φ, :runsbatch, false),
                       runnow = get(φ, :runnow, false),
-                      runpath = get(φ, :runpath, joinpath(Pkg.dir("RunTools", "src", "run.sh"))))
-  mkpath(logdir)    # Create logdir
+                      runpath = get(φ, :runpath, joinpath(Pkg.dir("RunTools", "src", "run.sh"))),
+                      dryrun = get(φ, :dryrun, false))
+  mkpath_ = dryrun ? dry(mkpath) : mkpath 
+  run_ = dryrun ? dry(run) : run 
+  sim_ = dryrun ? dry(sim) : sim
+  @show dryrun
+
+  mkpath_(logdir)    # Create logdir
   optpath = joinpath(logdir, "$runname.rd")    # Save the param file 
 
   # Schedule job using sbatch
   if runsbatch
     cmd =`sbatch -J $runname -o $runname.out $runpath $runfile $optpath`
     println("Scheduling sbatch: ", cmd)
-    run(cmd)
+    run_(cmd)
   end
   # Run job on local machine in new process
   if runlocal
     cmd = `julia $runfile $optpath`
     println("Running: ", cmd)
-    run(cmd)
+    run_(cmd)
   end
   # Run right now on this process
   if runnow
-    sim(φ)
+    sim_(φ)
   end
 end
 
@@ -53,29 +69,24 @@ end
 """
 
 ```jldoctest
-tasks = [`echo hi \$i` & `sleep $(rand(1:3))` for i = 1:3]
+runcmds = [`echo hi \$i` & `sleep $(rand(1:3))` for i = 1:3]
 ```
 
 """
-function queue(tasks, maxpoolsize)
+function queue(runcmds, maxpoolsize)
   pool = []
-  @showprogress 1 "Spawning Tasks..." for task in tasks
+  cleanpool!(pool) = filter!(process_running, pool)
+  @showprogress 1 "Spawning runcmds..." for runcmd in runcmds
     cleanpool!(pool)
     while length(pool) >= maxpoolsize
       cleanpool!(pool)
-      @show task
-      # @show length(pool)
-      # @show process_running.(pool)
+      yield()
     end
     println("Spawning Process")
-    push!(pool, spawn(task))
+    push!(pool, spawn(runcmd))
   end
 end
 
-function queue(tasks, stdout_, maxpoolsize)
-  queue((pipeline(task), stdout=stdout_) for (task, stdout_) in zip(tasks, outfiles))
-end
-
-function pool(sim, φ)
-  # if the pool is empty then add to it, otherwise
+function queue(runcmds, stdout_, maxpoolsize)
+  queue((pipeline(runcmd, stdout=stdout_)) for (runcmd, stdout_) in zip(runcmds, outfiles))
 end

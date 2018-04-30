@@ -12,11 +12,6 @@ function dispatchmany(sim, φs; ignoreexceptions = false, kwargs...)
   end 
 end
 
-
-# Options
-# 1. Only pass in varphi. Problem is all arguments are hidden
-# 2. Only pass in kwargs. Problem is want to pass φ to sim
-# 3. Do both, what about inconsistencies
 """
 Run (or schedule to run) `sim` with params `φ`
 
@@ -26,6 +21,7 @@ Run (or schedule to run) `sim` with params `φ`
 """
 function dispatchruns(sim,
                       φ;
+                      runname = get(φ, :runname, "noname"),
                       runfile = φ[:runfile],
                       logdir = get(φ, :logdir, false),
                       runlocal = get(φ, :runlocal, false),
@@ -33,11 +29,11 @@ function dispatchruns(sim,
                       runnow = get(φ, :runnow, false),
                       runpath = get(φ, :runpath, joinpath(Pkg.dir("RunTools", "src", "run.sh"))))
   mkpath(logdir)    # Create logdir
-  optpath = joinpath(logdir, "$runname_.rd")    # Save the param file 
+  optpath = joinpath(logdir, "$runname.rd")    # Save the param file 
 
   # Schedule job using sbatch
   if runsbatch
-    cmd =`sbatch -J $runname_ -o $runname_.out $runpath $runfile $optpath`
+    cmd =`sbatch -J $runname -o $runname.out $runpath $runfile $optpath`
     println("Scheduling sbatch: ", cmd)
     run(cmd)
   end
@@ -51,4 +47,35 @@ function dispatchruns(sim,
   if runnow
     sim(φ)
   end
+end
+
+
+"""
+
+```jldoctest
+tasks = [`echo hi \$i` & `sleep $(rand(1:3))` for i = 1:3]
+```
+
+"""
+function queue(tasks, maxpoolsize)
+  pool = []
+  @showprogress 1 "Spawning Tasks..." for task in tasks
+    cleanpool!(pool)
+    while length(pool) >= maxpoolsize
+      cleanpool!(pool)
+      @show task
+      # @show length(pool)
+      # @show process_running.(pool)
+    end
+    println("Spawning Process")
+    push!(pool, spawn(task))
+  end
+end
+
+function queue(tasks, stdout_, maxpoolsize)
+  queue((pipeline(task), stdout=stdout_) for (task, stdout_) in zip(tasks, outfiles))
+end
+
+function pool(sim, φ)
+  # if the pool is empty then add to it, otherwise
 end

@@ -1,6 +1,6 @@
 "Dispatch many runs"
 function dispatchmany(sim, φs; ignoreexceptions = false, kwargs...)
-  if get(φs, :runlocal. false)
+  if get(φs, :runlocal, false)
     queue()
   else
     @showprogress 1 "Computing..." for φ in φs

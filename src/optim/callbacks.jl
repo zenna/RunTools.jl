@@ -1,5 +1,3 @@
-using JLD2, FileIO
-
 "Record standard run metrics to dataframe"
 function recordrungen(runname::Symbol)
   df = DataFrame(runname = Symbol[],

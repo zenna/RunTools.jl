@@ -35,6 +35,20 @@ function Base.prod(toenum::Params)
   (Params(Dict(zip(keys(toenum), v))) for v in q)
 end
 
+## Rand
+## ====
+dag(v, ω) = v
+dag(v::Params, ω) = v(ω)
+gag(v, ω) = v
+gag(v::RandVar, ω) = dag(v(ω), ω)
+gag(v::Params, ω) = v(ω)
+
+function (φ::Params)(ω::Omega)
+  Params(Dict(k => gag(v, ω) for (k, v) in φ.d))
+end
+Base.rand(ω, φ::Params) = φ(ω)
+Base.rand(φ::Params) = Base.rand(DefaultOmega(), φ)
+
 ## Show
 ## ====
 "Turn a key value into command line argument"
@@ -52,5 +66,7 @@ function linearstring(d::Dict, ks::Symbol...)
   join([string(k, "_", d[k]) for k in ks], "_")
 end
 
+
 Base.show(io::IO, φ::Params) = show(io, φ.d)
 Base.display(φ::Params) = (println("Params"); display(φ.d))
+

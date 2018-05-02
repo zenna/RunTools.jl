@@ -5,6 +5,8 @@ using ArgParse
 using ProgressMeter
 using JLD2
 using FileIO
+using IterTools
+using Mu
 
 include("dispatch.jl")    # Dispatch Jobs
 include("misc.jl")        # Miscellaneous

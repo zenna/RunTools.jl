@@ -1,19 +1,22 @@
 "Dispatch many runs"
-function dispatchmany(sim, φs; ignoreexceptions = false, kwargs...)
-  if get(φs, :runlocal, false)
-    queue()
-  else
-    @showprogress 1 "Computing..." for φ in φs
-      try
-        dispatchruns(sim, φ; kwargs...)
-      catch y
-        !ignoreexceptions && rethrow(y)
-        φ[:threw_exception] = true
-        println("Exception caught: $y")
-        println("continuing to next run")
-      end
-    end 
-  end
+function dispatchmanylocal(sim, φs; ignoreexceptions = false, kwargs...)
+  queue()
+  queue(runcmds, stdout_, maxpoolsize)
+end
+
+
+"Dispatch many runs"
+function dispatchmany(sim, φs; ignoreexceptions = Exception[], kwargs...)
+  @showprogress 1 "Computing..." for φ in φs
+    try
+      dispatchruns(sim, φ; kwargs...)
+    catch y
+      !any(((y isa ex for ex in ignoreexceptions)...)) && rethrow(y)
+      φ[:threw_exception] = true
+      println("Exception caught: $y")
+      println("continuing to next run")
+    end
+  end 
 end
 
 function dry(f, verbose=true)

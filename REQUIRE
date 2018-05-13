@@ -3,3 +3,4 @@ IterTools
 ProgressMeter
 JLD2
 FileIO
+BSON

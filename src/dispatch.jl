@@ -51,9 +51,11 @@ function dispatchruns(sim,
   φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
   saveparams_(φ, φpath)
 
+  outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
+
   # Schedule job using sbatch
   if sbatch
-    cmd =`sbatch -J $runname -o $runname.out $runpath $runfile --now --param $φpath`
+    cmd =`sbatch -J $runname -o $outpath $runpath $runfile --now --param $φpath`
     println("Scheduling sbatch: ", cmd)
     run_(cmd)
   end

@@ -27,7 +27,11 @@ function stdargs()
     args
     Params((Symbol(k) => v for (k, v) in args)...)
   end
-  
+
+# "Commit of current directory"
+gitinfo() = strip(readstring(`git describe --always`))
+gitinfo(path::String) = strip(readstring(`cd $path` & `git describe --always`))
+gitinfo(mod::Module) = gitinfo(Pkg.dir(string(mod)))
 
 # function stdargs()
 #   s = ArgParseSettings()
@@ -79,10 +83,6 @@ function stdargs()
 # def handle_arch(opt):
 #   opt["arch"] = asl.archs.convnet.ConvNet
 #   opt["arch_opt"] = {}
-
-# "Commit of current directory"
-# git_info() = strip(readstring(`git describe --always`))
-# git_info(mod::Module) = git_info(Pkg.dir(string(mod)))
 
 # "Handle command line arguments"
 # function handle_args(*add_cust_parses):

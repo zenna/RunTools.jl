@@ -1,35 +1,66 @@
+using ArgParse
+
 function stdargs()
-  s = ArgParseSettings()
-  @add_arg_table s begin
-    "--train"
-        help = "Train the model"
-    "--name", "-o"
-        help = "Name of job"
-        arg_type = Int
-        default = 0
-    "--logdir"
-        help = "Path to store data"
-        action = :store_true
-    "--resumepath"
-        help = "Path to resume parameters from"
-        required = true
-    "--nocuda"
-        help = "disables CUDA training"
-        required = true
-    "--dispatch"
-        help = "Dispatch many jobs"
-        required = true
-    "--optfile"
-        help = "Specify load file to get options from"
-        required = true
-    "--slurm"
-        help = "Use the SLURM batching system"
-        default = false
-    "--dryrun"
-        help = "Do a dry run, does not call subprocess"
-        default = false
+    s = ArgParseSettings()
+    @add_arg_table s begin
+      "--dispatch", "-d"
+          help = "Dispatch runs"
+          action = :store_true
+      "--now", "-n"
+          help = "Run job now (in this thread)"
+          action = :store_true
+      "--here", "-l"
+          help = "Run here, locally"
+          action = :store_true
+      "--sbatch", "-b"
+          help = "Call with sbatch"
+          action = :store_true
+      "--param", "-p"
+          help = "BSON Param file path"
+          arg_type = String
+      "--dryrun", "-y"
+          help = "Dry Run"
+          action = :store_true
+    end
+    args = parse_args(ARGS, s)
+    !(args["now"] ⊻ args["dispatch"]) && throw(ArgumentError("Dispatch or Runnow"))
+    args
+    Params((Symbol(k) => v for (k, v) in args)...)
   end
-end
+  
+
+# function stdargs()
+#   s = ArgParseSettings()
+#   @add_arg_table s begin
+#     "--train"
+#         help = "Train the model"
+#     "--name", "-o"
+#         help = "Name of job"
+#         arg_type = Int
+#         default = 0
+#     "--logdir"
+#         help = "Path to store data"
+#         action = :store_true
+#     "--resumepath"
+#         help = "Path to resume parameters from"
+#         required = true
+#     "--nocuda"
+#         help = "disables CUDA training"
+#         required = true
+#     "--dispatch"
+#         help = "Dispatch many jobs"
+#         required = true
+#     "--optfile"
+#         help = "Specify load file to get options from"
+#         required = true
+#     "--slurm"
+#         help = "Use the SLURM batching system"
+#         default = false
+#     "--dryrun"
+#         help = "Do a dry run, does not call subprocess"
+#         default = false
+#   end
+# end
 
 
 # def handle_log_dir(opt):

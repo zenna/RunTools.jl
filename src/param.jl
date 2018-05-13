@@ -3,6 +3,8 @@ struct Params{I, T} <: Associative{I, T}
   d::Dict{I, T}
 end
 
+Params(ps::Pair...)                         = Params(Dict(ps))
+
 Base.as_kwargs(φ::Params) = Base.as_kwargs(φ.d)
 Base.values(φ::Params) = values(φ.d)
 Base.keys(φ::Params) = keys(φ.d)
@@ -49,6 +51,17 @@ end
 Base.rand(ω, φ::Params) = φ(ω)
 Base.rand(φ::Params) = Base.rand(Mu.DefaultOmega(), φ)
 
+## IO
+## ==
+"Save Params to direction fn"
+function saveparams(φ::Params, fn::String; verbose = true)
+  verbose && println("Saving params to $fn")
+  bson(fn, param = φ)
+end
+
+"Load Paramas from path `fn`"
+loadparams(fn)::Params = BSON.load(fn)[:param]
+
 ## Show
 ## ====
 "Turn a key value into command line argument"
@@ -65,7 +78,6 @@ end
 function linearstring(d::Dict, ks::Symbol...)
   join([string(k, "_", d[k]) for k in ks], "_")
 end
-
 
 Base.show(io::IO, φ::Params) = show(io, φ.d)
 Base.display(φ::Params) = (println("Params"); display(φ.d))

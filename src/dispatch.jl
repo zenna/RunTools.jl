@@ -21,7 +21,7 @@ end
 
 function dry(f, verbose=true)
   function dryf(args...; kwargs...)
-    verbose && println("Dry run of $f called with args: $args and kwargs $kwargs")
+    verbose && println("Dry run of $f called with args: $args and kwargs $kwargs\n")
   end
 end
 
@@ -34,38 +34,39 @@ Run (or schedule to run) `sim` with params `φ`
 """
 function dispatchruns(sim,
                       φ;
+                      # runnow = false,
+                      sbatch = false,
+                      here = false,
                       runname = get(φ, :runname, "noname"),
                       runfile = φ[:runfile],
                       logdir = get(φ, :logdir, false),
-                      runlocal = get(φ, :runlocal, false),
-                      runsbatch = get(φ, :runsbatch, false),
-                      runnow = get(φ, :runnow, false),
                       runpath = get(φ, :runpath, joinpath(Pkg.dir("RunTools", "src", "run.sh"))),
                       dryrun = get(φ, :dryrun, false))
   mkpath_ = dryrun ? dry(mkpath) : mkpath 
   run_ = dryrun ? dry(run) : run 
   sim_ = dryrun ? dry(sim) : sim
-  @show dryrun
+  saveparams_  = dryrun ? dry(RunTools.saveparams) : RunTools.saveparams
 
   mkpath_(logdir)    # Create logdir
-  optpath = joinpath(logdir, "$runname.rd")    # Save the param file 
+  φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
+  saveparams_(φ, φpath)
 
   # Schedule job using sbatch
-  if runsbatch
-    cmd =`sbatch -J $runname -o $runname.out $runpath $runfile $optpath`
+  if sbatch
+    cmd =`sbatch -J $runname -o $runname.out $runpath $runfile --now --param $φpath`
     println("Scheduling sbatch: ", cmd)
     run_(cmd)
   end
   # Run job on local machine in new process
-  if runlocal
-    cmd = `julia $runfile $optpath`
+  if here
+    cmd = `julia $runfile $φpath`
     println("Running: ", cmd)
     run_(cmd)
   end
-  # Run right now on this process
-  if runnow
-    sim_(φ)
-  end
+  # # Run right now on this process
+  # if runnow
+  #   sim_(φ)
+  # end
 end
 
 

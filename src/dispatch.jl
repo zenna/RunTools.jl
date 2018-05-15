@@ -1,3 +1,18 @@
+""
+function control(sim, φs, args = RunTools.stdargs())
+  sim_ = args[:dryrun] ? RunTools.dry(sim) : sim
+  if args[:dispatch]
+    RunTools.dispatchmany(sim, φs;
+                          sbatch = args[:sbatch],
+                          here = args[:here],
+                          dryrun = args[:dryrun])
+  elseif args[:now] 
+    φ = RunTools.loadparams(args[:param])
+    sim_(φ)
+  end
+end
+
+
 "Dispatch many runs"
 function dispatchmanylocal(sim, φs; ignoreexceptions = false, kwargs...)
   queue()

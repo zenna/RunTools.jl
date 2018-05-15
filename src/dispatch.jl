@@ -64,9 +64,8 @@ function dispatchruns(sim,
 
   mkpath_(logdir)    # Create logdir
   φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
-  saveparams_(φ, φpath)
-
   outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
+  saveparams_(φ, φpath)
 
   # Schedule job using sbatch
   if sbatch
@@ -76,14 +75,11 @@ function dispatchruns(sim,
   end
   # Run job on local machine in new process
   if here
-    cmd = `julia $runfile $φpath`
+    cmd_ = `julia $runfile --now --param $φpath`
+    cmd = pipeline(cmd_, stdout = outpath)
     println("Running: ", cmd)
     run_(cmd)
   end
-  # # Run right now on this process
-  # if runnow
-  #   sim_(φ)
-  # end
 end
 
 

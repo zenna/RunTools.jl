@@ -15,6 +15,12 @@ function stdargs()
       "--sbatch", "-b"
           help = "Call with sbatch"
           action = :store_true
+      "--queue", "-q"
+          help = "Queue many locally"
+          action = :store_true
+      "--maxpoolsize", "-m"
+          help = "Max number or processes to run at once"
+          default = 2
       "--param", "-p"
           help = "BSON Param file path"
           arg_type = String
@@ -23,7 +29,9 @@ function stdargs()
           action = :store_true
     end
     args = parse_args(ARGS, s)
-    !(args["now"] ⊻ args["dispatch"]) && throw(ArgumentError("Dispatch or Runnow"))
+    if !(args["now"] ⊻ args["dispatch"] ⊻ args["queue"])
+      throw(ArgumentError("Dispatch or Runnow"))
+    end
     args
     Params((Symbol(k) => v for (k, v) in args)...)
   end

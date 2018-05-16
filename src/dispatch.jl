@@ -1,6 +1,7 @@
 ""
 function control(sim, φs, args = RunTools.stdargs())
   sim_ = args[:dryrun] ? RunTools.dry(sim) : sim
+  @show args
   if args[:dispatch]
     RunTools.dispatchmany(sim, φs;
                           sbatch = args[:sbatch],
@@ -9,16 +10,22 @@ function control(sim, φs, args = RunTools.stdargs())
   elseif args[:now] 
     φ = RunTools.loadparams(args[:param])
     sim_(φ)
+  elseif args[:queue]
+    queue(φs, args[:maxpoolsize])
   end
 end
 
+
+function ok()
+  saveparams_  = dryrun ? dry(RunTools.saveparams) : RunTools.saveparams
+  mkpath_(logdir)    # Create logdir
+end
 
 "Dispatch many runs"
 function dispatchmanylocal(sim, φs; ignoreexceptions = false, kwargs...)
   queue()
   queue(runcmds, stdout_, maxpoolsize)
 end
-
 
 "Dispatch many runs"
 function dispatchmany(sim, φs; ignoreexceptions = Exception[], kwargs...)
@@ -82,28 +89,56 @@ function dispatchruns(sim,
   end
 end
 
+# """
+
+# ```jldoctest
+# runcmds = [`echo hi \$i` & `sleep $(rand(1:3))` for i = 1:3]
+# ```
+# """
+# function queue(runcmds, maxpoolsize)
+#   pool = []
+#   cleanpool!(pool) = filter!(process_running, pool)
+#   @showprogress 1 "Spawning runcmds..." for runcmd in runcmds
+#     cleanpool!(pool)
+#     while length(pool) >= maxpoolsize
+#       cleanpool!(pool)
+#       yield()
+#     end
+#     println("Spawning Process")
+#     push!(pool, spawn(runcmd))
+#   end
+# end
 
 """
 
 ```jldoctest
 runcmds = [`echo hi \$i` & `sleep $(rand(1:3))` for i = 1:3]
 ```
-
 """
-function queue(runcmds, maxpoolsize)
+function queue(φs, maxpoolsize)
   pool = []
   cleanpool!(pool) = filter!(process_running, pool)
-  @showprogress 1 "Spawning runcmds..." for runcmd in runcmds
+  @showprogress 1 "Spawning runcmds..." for φ in φs
     cleanpool!(pool)
     while length(pool) >= maxpoolsize
       cleanpool!(pool)
       yield()
     end
-    println("Spawning Process")
+
+    mkpath(logdir)    # Create logdir
+    φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
+    outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")  
+    runcmd_ = `julia $runfile --now --param $φpath`
+    runcmd = pipeline(runcmd_, stdout = outpath)
+    println("Spawning Process $runcmd")
     push!(pool, spawn(runcmd))
   end
 end
 
-function queue(runcmds, stdout_, maxpoolsize)
-  queue((pipeline(runcmd, stdout=stdout_)) for (runcmd, stdout_) in zip(runcmds, outfiles))
-end
+# function queue(runcmds, stdout_, maxpoolsize)
+#   queue((pipeline(runcmd, stdout=stdout_)) for (runcmd, stdout_) in zip(runcmds, outfiles))
+# end
+
+# function queue(φs)
+#   saveparams_(φ, φpath)
+# end

@@ -125,10 +125,10 @@ function queue(φs, maxpoolsize)
       yield()
     end
 
-    mkpath(logdir)    # Create logdir
+    mkpath(φ[:logdir])    # Create logdir
     φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
-    outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")  
-    runcmd_ = `julia $runfile --now --param $φpath`
+    outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
+    runcmd_ = `julia $(φ[:runfile]) --now --param $φpath`
     runcmd = pipeline(runcmd_, stdout = outpath)
     println("Spawning Process $runcmd")
     push!(pool, spawn(runcmd))

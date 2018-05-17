@@ -72,6 +72,7 @@ function dispatchruns(sim,
   mkpath_(logdir)    # Create logdir
   φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
   outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
+  errpath = joinpath(φ[:logdir], "$(φ[:runname]).err")
   saveparams_(φ, φpath)
 
   # Schedule job using sbatch
@@ -83,7 +84,7 @@ function dispatchruns(sim,
   # Run job on local machine in new process
   if here
     cmd_ = `julia $runfile --now --param $φpath`
-    cmd = pipeline(cmd_, stdout = outpath)
+    cmd = pipeline(cmd_, stdout = outpath, stderr = errpath)
     println("Running: ", cmd)
     run_(cmd)
   end
@@ -128,8 +129,10 @@ function queue(φs, maxpoolsize)
     mkpath(φ[:logdir])    # Create logdir
     φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
     outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
+    errpath = joinpath(φ[:logdir], "$(φ[:runname]).err")
+    saveparams(φ, φpath)
     runcmd_ = `julia $(φ[:runfile]) --now --param $φpath`
-    runcmd = pipeline(runcmd_, stdout = outpath)
+    runcmd = pipeline(runcmd_, stdout = outpath, stderr = errpath)
     println("Spawning Process $runcmd")
     push!(pool, spawn(runcmd))
   end

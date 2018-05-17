@@ -21,6 +21,7 @@ function stdargs()
       "--maxpoolsize", "-m"
           help = "Max number or processes to run at once"
           default = 2
+          arg_type = Int
       "--param", "-p"
           help = "BSON Param file path"
           arg_type = String
@@ -30,7 +31,7 @@ function stdargs()
     end
     args = parse_args(ARGS, s)
     if !(args["now"] ⊻ args["dispatch"] ⊻ args["queue"])
-      throw(ArgumentError("Dispatch or Runnow"))
+      throw(ArgumentError("Choose one of now, dispatch, queue"))
     end
     args
     Params((Symbol(k) => v for (k, v) in args)...)

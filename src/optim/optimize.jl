@@ -47,7 +47,6 @@ function optimize(step!::Function;
   
   # Called once before optimization
   foreach(cb->apl(cb, cb_data), pre_callbacks)
-  lens(:pre_opt, start_i = start_i, i = i)
 
   while cont(cb_data)
     cb_data = Dict{Symbol, Any}(:start_i=>start_i, :i=>i, :Stage=>Run)
@@ -60,7 +59,6 @@ function optimize(step!::Function;
   end
 
   # Post Callbacks
-  lens(:post_opt, start_i = start_i, i = i)
   cb_data = Dict{Symbol, Any}(:start_i=>start_i, :i=>i, :Stage=>Post)
   foreach(cb->apl(cb, cb_data), post_callbacks)
 end

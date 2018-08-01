@@ -7,7 +7,7 @@ using JLD2
 using FileIO
 using IterTools
 using Omega
-using BSON
+using BSON  
 
 include("dispatch.jl")    # Dispatch Jobs
 include("misc.jl")        # Miscellaneous
@@ -15,7 +15,6 @@ include("generator.jl")   # Generators
 include("param.jl")       # Parameters
 include("optim/Optim.jl") # Generators
 include("cmd.jl")         # Command Line Argument Parsing
-
 
 export dispatchmany,
        dispatchruns,

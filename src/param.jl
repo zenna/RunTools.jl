@@ -48,8 +48,8 @@ gag(v::Params, ω) = v(ω)
 function (φ::Params)(ω::Omega.Ω)
   Params(Dict(k => gag(v, ω) for (k, v) in φ.d))
 end
-Base.rand(ω, φ::Params) = φ(ω)
-Base.rand(φ::Params) = Base.rand(Omega.DefaultΩ(), φ)
+Base.rand(ω::Ω, φ::Params) = φ(ω)
+Base.rand(φ::Params) = φ(Omega.defΩ()())
 
 ## IO
 ## ==

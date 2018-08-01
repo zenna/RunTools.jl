@@ -1,3 +1,10 @@
+# Replace the whole thing with a named tuple?
+# Break 0.6 support
+# can use φ.α
+# Can't mutate.  Might be cumbersome 
+# I need to be able to sample from it
+# and nested access might be nice
+
 "Parameter Set"
 struct Params{I, T} <: Associative{I, T}
   d::Dict{I, T}
@@ -68,7 +75,7 @@ function saveparams(param::Params, fn::String; verbose = true)
 end
 
 "Load Paramas from path `fn`"
-loadparams(fn)::Params = JLD2.@load fn param
+loadparams(fn)::Params = (JLD2.@load fn param; param)
 
 ## Show
 ## ====

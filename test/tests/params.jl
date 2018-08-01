@@ -1,4 +1,4 @@
-using Mu
+using Omega
 using Base.Test
 
 function params_test1()

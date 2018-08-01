@@ -42,14 +42,14 @@ end
 dag(v, ω) = v
 dag(v::Params, ω) = v(ω)
 gag(v, ω) = v
-gag(v::Mu.RandVar, ω) = dag(v(ω), ω)
+gag(v::Omega.RandVar, ω) = dag(v(ω), ω)
 gag(v::Params, ω) = v(ω)
 
-function (φ::Params)(ω::Mu.Omega)
+function (φ::Params)(ω::Omega.Ω)
   Params(Dict(k => gag(v, ω) for (k, v) in φ.d))
 end
 Base.rand(ω, φ::Params) = φ(ω)
-Base.rand(φ::Params) = Base.rand(Mu.DefaultOmega(), φ)
+Base.rand(φ::Params) = Base.rand(Omega.DefaultΩ(), φ)
 
 ## IO
 ## ==

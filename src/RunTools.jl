@@ -6,7 +6,7 @@ using ProgressMeter
 using JLD2
 using FileIO
 using IterTools
-using Mu
+using Omega
 using BSON
 
 include("dispatch.jl")    # Dispatch Jobs

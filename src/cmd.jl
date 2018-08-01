@@ -23,7 +23,7 @@ function stdargs()
           default = 2
           arg_type = Int
       "--param", "-p"
-          help = "BSON Param file path"
+          help = "JLD2 Param file path"
           arg_type = String
       "--dryrun", "-y"
           help = "Dry Run"

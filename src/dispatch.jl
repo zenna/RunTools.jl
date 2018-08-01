@@ -70,7 +70,7 @@ function dispatchruns(sim,
   saveparams_  = dryrun ? dry(RunTools.saveparams) : RunTools.saveparams
 
   mkpath_(logdir)    # Create logdir
-  φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
+  φpath = joinpath(φ[:logdir], "$(φ[:runname]).jld2")    # Save the param file 
   outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
   errpath = joinpath(φ[:logdir], "$(φ[:runname]).err")
   saveparams_(φ, φpath)
@@ -127,7 +127,7 @@ function queue(φs, maxpoolsize)
     end
 
     mkpath(φ[:logdir])    # Create logdir
-    φpath = joinpath(φ[:logdir], "$(φ[:runname]).bson")    # Save the param file 
+    φpath = joinpath(φ[:logdir], "$(φ[:runname]).jld2")    # Save the param file 
     outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
     errpath = joinpath(φ[:logdir], "$(φ[:runname]).err")
     saveparams(φ, φpath)

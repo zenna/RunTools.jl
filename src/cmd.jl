@@ -10,7 +10,7 @@ function stdargs()
           help = "Run job now (in this thread)"
           action = :store_true
       "--here", "-l"
-          help = "Run here, locally"
+          help = "Run here, locally (spawns new processes)"
           action = :store_true
       "--sbatch", "-b"
           help = "Call with sbatch"

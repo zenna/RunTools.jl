@@ -53,14 +53,22 @@ Base.rand(φ::Params) = φ(Omega.defΩ()())
 
 ## IO
 ## ==
-"Save Params to direction fn"
-function saveparams(φ::Params, fn::String; verbose = true)
+# "Save Params to direction fn"
+# function saveparams(φ::Params, fn::String; verbose = true)
+#   verbose && println("Saving params to $fn")
+#   bson(fn, param = φ)
+# end
+
+# "Load Paramas from path `fn`"
+# loadparams(fn)::Params = BSON.load(fn)[:param]
+
+function saveparams(param::Params, fn::String; verbose = true)
   verbose && println("Saving params to $fn")
-  bson(fn, param = φ)
+  JLD2.@save fn param
 end
 
 "Load Paramas from path `fn`"
-loadparams(fn)::Params = BSON.load(fn)[:param]
+loadparams(fn)::Params = JLD2.@load fn param
 
 ## Show
 ## ====

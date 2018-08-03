@@ -12,7 +12,7 @@ end
 
 Params(ps::Pair...)                         = Params(Dict(ps))
 
-Base.as_kwargs(φ::Params) = Base.as_kwargs(φ.d)
+# Base.as_kwargs(φ::Params) = Base.as_kwargs(φ.d)
 Base.values(φ::Params) = values(φ.d)
 Base.keys(φ::Params) = keys(φ.d)
 Base.get(φ::Params, k, v) = get(φ.d, k, v)
@@ -60,15 +60,6 @@ Base.rand(φ::Params) = φ(Omega.defΩ()())
 
 ## IO
 ## ==
-# "Save Params to direction fn"
-# function saveparams(φ::Params, fn::String; verbose = true)
-#   verbose && println("Saving params to $fn")
-#   bson(fn, param = φ)
-# end
-
-# "Load Paramas from path `fn`"
-# loadparams(fn)::Params = BSON.load(fn)[:param]
-
 function saveparams(param::Params, fn::String; verbose = true)
   verbose && println("Saving params to $fn")
   JLD2.@save fn param

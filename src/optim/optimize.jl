@@ -6,12 +6,12 @@ apl(f, data) = f(data)
 take!(x::Real) = x
 take!(x::Array{<:Real}) = x
 take!(f::Function) = f()
-take1(rep) = collect(Base.Iterators.take(rep, 1))[1]
-function take1(imap::IterTools.IMap)
-  for i in imap
-    return i
-  end
-end
+# take1(rep) = collect(Base.Iterators.take(rep, 1))[1]
+# function take1(imap::IterTools.IMap)
+#   for i in imap
+#     return i
+#   end
+# end
 
 """
 Optimization.

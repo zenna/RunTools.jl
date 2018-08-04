@@ -83,7 +83,7 @@ function dispatchruns(sim,
   end
   # Run job on local machine in new process
   if here
-    cmd_ = `julia $runfile --now --param $φpath`
+    cmd_ = ` --depwarn=no --depwarn=no $runfile --now --param $φpath`
     cmd = pipeline(cmd_, stdout = outpath, stderr = errpath)
     println("Running: ", cmd)
     run_(cmd)
@@ -131,7 +131,7 @@ function queue(φs, maxpoolsize)
     outpath = joinpath(φ[:logdir], "$(φ[:runname]).out")
     errpath = joinpath(φ[:logdir], "$(φ[:runname]).err")
     saveparams(φ, φpath)
-    runcmd_ = `julia $(φ[:runfile]) --now --param $φpath`
+    runcmd_ = `julia --depwarn=no $(φ[:runfile]) --now --param $φpath`
     runcmd = pipeline(runcmd_, stdout = outpath, stderr = errpath)
     println("Spawning Process $runcmd")
     push!(pool, spawn(runcmd))

@@ -1,5 +1,4 @@
-__precompile__()
-"Module for optimization dispatching jobs / params stuff that kinda stuff"
+"Tools for optimization / inference"
 module RunTools
 using ArgParse
 using ProgressMeter

@@ -6,7 +6,7 @@
 # and nested access might be nice
 
 "Parameter Set"
-struct Params{I, T} <: Associative{I, T}
+struct Params{I, T} <: AbstractDict{I, T}
   d::Dict{I, T}
 end
 
@@ -23,9 +23,9 @@ Base.getindex(θ::Params{I}, i::I) where I = θ.d[i]
 Base.setindex!(θ::Params{I}, v, i::I) where I = θ.d[i] = v 
 Base.merge(a::Params, b::Params...) = Params(merge(a.d, (φ.d for φ in b)...))
 
-Base.start(φ::Params) = start(φ.d)
-Base.done(φ::Params, i) = done(φ.d, i)
-Base.next(φ::Params, i) = next(φ.d, i)
+Base.iterate(φ::Params) = iterate(φ.d)
+Base.iterate(φ::Params, state) = iterate(φ.d, state)
+
 """Product space of `Param` from  product of values(φ)
 
 ```jldoctest

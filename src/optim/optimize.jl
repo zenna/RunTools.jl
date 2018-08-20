@@ -21,8 +21,6 @@ Optimization.
    e.g..,
    ```cb_data_ = merge(cb_data, @NT(loss = cur_loss))
       foreach(cb->cb(cb_data_), callbacks)```
-- `writer`: Summary writer to log results to tensorboardX
-- `close_writer`: Close writer after finish?
 - `pre_callbacks`: functions/generators called before optimization
 - `callbacks`: functions called with data every iteration, e.g for viz
 - `post_callbacks`: functions/generators called after optimization

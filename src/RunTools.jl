@@ -10,6 +10,8 @@ using Random
 using Dates: now
 # using BSON  
 
+bye() = Omega.hello()
+
 include("dispatch.jl")    # Dispatch Jobs
 include("misc.jl")        # Miscellaneous
 include("generator.jl")   # Generators

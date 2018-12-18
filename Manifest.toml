@@ -164,12 +164,6 @@ git-tree-sha1 = "ed0787e62dc46b8d8c7c3db54391d71e0da5fefd"
 uuid = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
 version = "1.0.0"
 
-[[JLD2]]
-deps = ["CodecZlib", "Compat", "DataStructures", "FileIO"]
-git-tree-sha1 = "64d3ffd85e557a9e4afa9f256c1944ae7672bc80"
-uuid = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
-version = "0.0.6"
-
 [[JSON]]
 deps = ["Dates", "Distributed", "Mmap", "Sockets", "Test", "Unicode"]
 git-tree-sha1 = "723a515212612b2175095fa5fa55da0bb4c377e5"

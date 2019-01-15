@@ -8,9 +8,8 @@ using IterTools
 using Omega
 using Random
 using Dates: now
+using Lens
 # using BSON  
-
-bye() = Omega.hello()
 
 include("dispatch.jl")    # Dispatch Jobs
 include("misc.jl")        # Miscellaneous

@@ -43,6 +43,24 @@ git-tree-sha1 = "055eb2690182ebc31087859c3dd8598371d3ef9e"
 uuid = "b99e7846-7c00-51b0-8f62-c81ae34c0232"
 version = "0.5.3"
 
+[[CMake]]
+deps = ["BinDeps", "Libdl", "Test"]
+git-tree-sha1 = "6e39bef3cbb8321e8a464b18a5c20d7cef813938"
+uuid = "631607c0-34d2-5d66-819e-eb0f9aa2061a"
+version = "1.1.1"
+
+[[CMakeWrapper]]
+deps = ["BinDeps", "CMake", "Libdl", "Parameters", "Test"]
+git-tree-sha1 = "2b43d451639984e3571951cc687b8509b0a86c6d"
+uuid = "d5fb7624-851a-54ee-a528-d3f3bac0b4a0"
+version = "0.2.2"
+
+[[Callbacks]]
+deps = ["ProgressMeter"]
+path = "/home/zenna/repos/Callbacks.jl"
+uuid = "5c501fca-fc9b-11e8-1fb9-dbe118bb7e64"
+version = "0.1.0"
+
 [[Cassette]]
 deps = ["InteractiveUtils", "LinearAlgebra", "Test"]
 git-tree-sha1 = "dac71009ded2090e014098c566cfae447cfd686b"
@@ -212,6 +230,12 @@ version = "0.4.4"
 deps = ["Base64"]
 uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 
+[[MathProgBase]]
+deps = ["Compat"]
+git-tree-sha1 = "3bf2e534e635df810e5f4b4f1a8b6de9004a0d53"
+uuid = "fdba3010-5040-5b88-9595-932c9decdf73"
+version = "0.7.7"
+
 [[Media]]
 deps = ["MacroTools", "Test"]
 git-tree-sha1 = "75a54abd10709c01f1b86b84ec225d26e840ed58"
@@ -227,6 +251,12 @@ version = "0.3.1"
 [[Mmap]]
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
+[[NLopt]]
+deps = ["BinaryProvider", "CMakeWrapper", "Libdl", "MathProgBase", "Test"]
+git-tree-sha1 = "b46237debcacd4fed7bbeb31200667a75b90384f"
+uuid = "76087f3c-5699-56af-9a33-bf431cd00edd"
+version = "0.5.1"
+
 [[NNlib]]
 deps = ["Libdl", "LinearAlgebra", "MacroTools", "Requires", "Test"]
 git-tree-sha1 = "51330bb45927379007e089997bf548fbe232589d"
@@ -240,9 +270,9 @@ uuid = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
 version = "0.3.2"
 
 [[Omega]]
-deps = ["Distributions", "Flux", "PDMats", "Pkg", "ProgressMeter", "Random", "Spec", "Statistics", "Test", "UnicodePlots"]
-git-tree-sha1 = "2d6b55733e5990b41e811b375bda4b715c4907ec"
-uuid = "1af16e33-887a-59b3-8344-18f1671b3ade"
+deps = ["Callbacks", "Distributions", "Flux", "ForwardDiff", "NLopt", "ProgressMeter", "Random", "Spec", "Statistics", "UnicodePlots"]
+path = "/home/zenna/repos/Omega.jl"
+uuid = "f05e9b56-6544-11e8-2dc8-1fe18f3ca5da"
 version = "0.1.0"
 
 [[OrderedCollections]]
@@ -256,6 +286,12 @@ deps = ["Arpack", "LinearAlgebra", "SparseArrays", "SuiteSparse", "Test"]
 git-tree-sha1 = "b6c91fc0ab970c0563cbbe69af18d741a49ce551"
 uuid = "90014a1f-27ba-587c-ab20-58faa44d9150"
 version = "0.9.6"
+
+[[Parameters]]
+deps = ["Markdown", "OrderedCollections", "REPL", "Test"]
+git-tree-sha1 = "70bdbfb2bceabb15345c0b54be4544813b3444e4"
+uuid = "d96e819e-fc66-5662-9728-84c9c7592b0a"
+version = "0.10.3"
 
 [[Pkg]]
 deps = ["Dates", "LibGit2", "Markdown", "Printf", "REPL", "Random", "SHA", "UUIDs"]

@@ -248,11 +248,9 @@ uuid = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
 version = "0.3.2"
 
 [[Omega]]
-deps = ["Distributions", "Flux", "ForwardDiff", "ProgressMeter", "Random", "Spec", "Statistics", "UnicodePlots"]
+deps = ["Distributions", "Flux", "PDMats", "Pkg", "ProgressMeter", "Random", "Spec", "Statistics", "Test", "UnicodePlots"]
 git-tree-sha1 = "2d6b55733e5990b41e811b375bda4b715c4907ec"
-repo-rev = "master"
-repo-url = "https://github.com/zenna/Omega.jl"
-uuid = "f05e9b56-6544-11e8-2dc8-1fe18f3ca5da"
+uuid = "1af16e33-887a-59b3-8344-18f1671b3ade"
 version = "0.1.0"
 
 [[OrderedCollections]]

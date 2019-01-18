@@ -11,6 +11,8 @@ using Dates: now
 using Lens
 # using BSON  
 
+t() = Omega.t()
+
 include("dispatch.jl")    # Dispatch Jobs
 include("misc.jl")        # Miscellaneous
 include("generator.jl")   # Generators

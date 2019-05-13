@@ -10,6 +10,25 @@ struct Params{I, T} <: AbstractDict{I, T}
   d::Dict{I, T}
 end
 
+function Base.getproperty(φ::Params, k::Symbol)
+  d_ = getfield(φ, :d)
+  if k == :d
+    d_
+  else
+    d_[k]
+  end
+end
+
+function Base.setproperty!(φ::Params, name::Symbol, x)
+  if name  == :d
+    error("Cannot assign d as a property of params.  Use another name!")
+  else
+    φ.d[name] = x
+  end
+end
+
+Params(x::NamedTuple) = Params(Dict(k => v for (k, v) in pairs(x)))
+
 Params(ps::Pair...)                         = Params(Dict(ps))
 
 # Base.as_kwargs(φ::Params) = Base.as_kwargs(φ.d)
@@ -44,8 +63,7 @@ function Base.prod(toenum::Params)
   (Params(Dict(zip(keys(toenum), v))) for v in q)
 end
 
-## Rand
-## ====
+# Rand
 dag(v, ω) = v
 dag(v::Params, ω) = v(ω)
 gag(v, ω) = v
@@ -58,8 +76,7 @@ end
 Base.rand(ω::Ω, φ::Params) = φ(ω)
 Base.rand(φ::Params) = φ(Omega.defΩ()())
 
-## IO
-## ==
+# IO
 function saveparams(param::Params, fn::String; verbose = true)
   verbose && println("Saving params to $fn")
   JLD2.@save fn param

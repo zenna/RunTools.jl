@@ -27,9 +27,10 @@ function Base.setproperty!(φ::Params, name::Symbol, x)
   end
 end
 
+Params() = Params(Dict{Symbol, Any}())
+Params(; kwargs...) = Params(kwargs...)
 Params(x::NamedTuple) = Params(Dict(k => v for (k, v) in pairs(x)))
-
-Params(ps::Pair...)                         = Params(Dict(ps))
+Params(ps::Pair...) = Params(Dict(ps))
 
 # Base.as_kwargs(φ::Params) = Base.as_kwargs(φ.d)
 Base.values(φ::Params) = values(φ.d)

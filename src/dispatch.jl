@@ -1,24 +1,23 @@
-""
+"""Run `sim` now, queue `sim`, or `dispatch` depending on `φs`
+
+- sim(φ) Runs simulation taking parameters as input
+- args: run parameters
+- φs: Collection of parameters
+"""
 function control(sim, φs, args = RunTools.stdargs())
-  sim_ = args[:dryrun] ? RunTools.dry(sim) : sim
+  sim_ = args.dryrun ? RunTools.dry(sim) : sim
   @show args
   if args[:dispatch]
     RunTools.dispatchmany(sim, φs;
                           sbatch = args[:sbatch],
                           here = args[:here],
                           dryrun = args[:dryrun])
-  elseif args[:now] 
+  elseif args.now 
     φ = RunTools.loadparams(args[:param])
     sim_(φ)
-  elseif args[:queue]
+  elseif args.queue
     queue(φs, args[:maxpoolsize])
   end
-end
-
-
-function ok()
-  saveparams_  = dryrun ? dry(RunTools.saveparams) : RunTools.saveparams
-  mkpath_(logdir)    # Create logdir
 end
 
 "Dispatch many runs"

@@ -6,3 +6,20 @@ Tools for running simulations at scale
 - Interaction with Slurm
 
 # Usage
+
+
+- Define `infer`
+
+Define a function which takes a param and runs your simulation.
+
+Example:
+
+```julia
+function infer(p)
+  total = 0
+  for i = 1:p.niterations
+    total += rand()
+  end
+end
+```
+

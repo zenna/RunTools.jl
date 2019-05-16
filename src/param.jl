@@ -27,8 +27,7 @@ function Base.setproperty!(φ::Params, name::Symbol, x)
   end
 end
 
-Params() = Params(Dict{Symbol, Any}())
-Params(; kwargs...) = Params(kwargs...)
+Params(; kwargs...) = isempty(kwargs) ? Params(Dict{Symbol, Any}()) : Params(kwargs...)
 Params(x::NamedTuple) = Params(Dict(k => v for (k, v) in pairs(x)))
 Params(ps::Pair...) = Params(Dict(ps))
 
@@ -37,7 +36,6 @@ Base.values(φ::Params) = values(φ.d)
 Base.keys(φ::Params) = keys(φ.d)
 Base.get(φ::Params, k, v) = get(φ.d, k, v)
 Base.get!(φ::Params, k, v) = get!(φ.d, k, v)
-Params() = Params{Symbol, Any}(Dict{Symbol, Any}())
 Base.getindex(θ::Params{I}, i::I) where I = θ.d[i]
 "Set default value"
 Base.setindex!(θ::Params{I}, v, i::I) where I = θ.d[i] = v 

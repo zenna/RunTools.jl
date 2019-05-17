@@ -62,4 +62,7 @@ end
 Base.rand(φ::Params, n::Integer) = rand(SuParams(φ), n)
 Base.rand(φ::Params) = rand(SuParams(φ))
 
+Base.show(io, sp::SuParams) = show(io, sp.d)
+Base.show(io, mime, sp::SuParams) = show(io, mine, sp.d)
+Base.display(sp::SuParams) = display(sp.d)
 end

@@ -1,10 +1,3 @@
-# Replace the whole thing with a named tuple?
-# Break 0.6 support
-# can use φ.α
-# Can't mutate.  Might be cumbersome 
-# I need to be able to sample from it
-# and nested access might be nice
-
 "Parameter Set"
 struct Params{I, T} <: AbstractDict{I, T}
   d::Dict{I, T}
@@ -63,17 +56,20 @@ function Base.prod(toenum::Params)
 end
 
 # Rand
-dag(v, ω) = v
-dag(v::Params, ω) = v(ω)
-gag(v, ω) = v
-gag(v::Omega.RandVar, ω) = dag(v(ω), ω)
-gag(v::Params, ω) = v(ω)
+# dag(v, ω) = v
+# dag(v::Params, ω) = v(ω)
+# gag(v, ω) = v
+# gag(v::Omega.RandVar, ω) = dag(v(ω), ω)
+# gag(v::Params, ω) = v(ω)
 
-function (φ::Params)(ω::Omega.Ω)
-  Params(Dict(k => gag(v, ω) for (k, v) in φ.d))
-end
-Base.rand(ω::Ω, φ::Params) = φ(ω)
-Base.rand(φ::Params) = φ(Omega.defΩ()())
+# function (φ::Params)(ω::Omega.Ω)
+#   Params(Dict(k => gag(v, ω) for (k, v) in φ.d))
+# end
+# Base.rand(ω::Ω, φ::Params) = φ(ω)
+# Base.rand(φ::Params) = φ(Omega.defΩ()())
+
+"Convert φ into namedtuple, useful for type stability / performance"
+namedtuple(φ::Params) = NamedTuple{(keys(φ)...,)}((values(φ)...,))
 
 # IO
 function saveparams(param::Params, fn::String; verbose = true)

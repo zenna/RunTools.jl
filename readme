@@ -7,15 +7,17 @@ Tools for running simulations at scale
 
 # Usage
 
+- Define a `Param`s
+```julia
+p = Params(niterations = 10)
+```
 
-- Define `infer`
-
-Define a function which takes a param and runs your simulation.
+- Define a simulation function which takes a paramter value as its single argument
 
 Example:
 
 ```julia
-function infer(p)
+function sim(p)
   total = 0
   for i = 1:p.niterations
     total += rand()

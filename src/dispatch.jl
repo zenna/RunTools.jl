@@ -40,6 +40,7 @@ function dispatchmany(sim, φs; ignoreexceptions = Exception[], kwargs...)
   end 
 end
 
+"`dry(f; verbose)` returns `dryf`, s.t `dryf(args...)` does nothing put print `f` and `args`"
 function dry(f, verbose=true)
   function dryf(args...; kwargs...)
     verbose && println("Dry run of $f called with args: $args and kwargs $kwargs\n")

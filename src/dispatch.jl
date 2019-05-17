@@ -76,11 +76,12 @@ function dispatch(sim,
   paramspath = joinpath(φ.logdir, "$(φ.runname).jld2")    # Save the param file 
   outpath = joinpath(φ.logdir, "$(φ.runname).out")
   errpath = joinpath(φ.logdir, "$(φ.runname).err")
+  simname = φ.simname
   saveparams_(φ, paramspath)
 
   # Schedule job using sbatch
   if sbatch
-    cmd =`sbatch -J $runname -o $outpath $runpath $runfile --now --params $paramspath`
+    cmd =`sbatch -J $runname -o $outpath $runpath --color=yes -L $runfile -E 'import RunTools; '$simname'(RunTools.loadparams("'$paramspath'"))'`
     println("Scheduling sbatch: ", cmd)
     run_(cmd)
   end

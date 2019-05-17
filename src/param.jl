@@ -80,8 +80,7 @@ end
 "Load Paramas from path `fn`"
 loadparams(fn)::Params = (JLD2.@load fn param; param)
 
-## Show
-## ====
+# Show
 "Turn a key value into command line argument"
 function stringify(k, v)
   if v == true

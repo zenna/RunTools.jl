@@ -11,7 +11,6 @@ using Dates: now
 using Lens
 
 
-include("dispatch.jl")    # Dispatch Jobs
 include("misc.jl")        # Miscellaneous
 include("generator.jl")   # Generators
 include("param.jl")       # Parameters
@@ -21,7 +20,10 @@ using .SuParameters
 include("optim/Optim.jl") # Generators
 include("cmd.jl")         # Command Line Argument Parsing
 
-export dispatchmany,
+include("dispatch.jl")    # Dispatch Jobs
+
+export control,
+       dispatchmany,
        dispatchruns,
        randrunname,
        logdir,

@@ -120,7 +120,7 @@ function queue(φs; maxpoolsize)
     errpath = joinpath(φ.logdir, "$(φ.runname).err")
     saveparams(φ, paramspath)
 
-    cmd_ = gencmd(φ.runfile, φ.simname, φ.paramspath)
+    cmd_ = gencmd(φ.runfile, φ.simname, paramspath)
     cmd = pipeline(cmd_, stdout = outpath, stderr = errpath)
 
     println("Run $cmd")

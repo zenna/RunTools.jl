@@ -18,16 +18,17 @@ include("suparam.jl")     # Super Parameters
 using .SuParameters
 
 include("optim/Optim.jl") # Generators
+include("git.jl")
 include("cmd.jl")         # Command Line Argument Parsing
 
 include("dispatch.jl")    # Dispatch Jobs
 
 export control,
-       dispatchmany,
-       dispatchruns,
+       dispatch,
        randrunname,
        logdir,
        datadir,
        Params,
-       SuParams
+       SuParams,
+       current_commit
 end

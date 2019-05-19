@@ -30,5 +30,6 @@ export control,
        datadir,
        Params,
        SuParams,
-       current_commit
+       current_commit,
+       linearstring
 end

@@ -20,8 +20,8 @@ SuParams(x::NamedTuple) = SuParams(Dict(k => v for (k, v) in pairs(x)))
 SuParams(ps::Pair...) = SuParams(Dict(ps))
 SuParams(p::Params) = SuParams(p.d)
 
-ok(x::RandVar) = x
-ok(x) = constant(x)
+@inline aplifrv(x::RandVar, ω) = apl(x, ω)
+@inline aplifrv(x, ω) = x
 
 # Fields
 function Base.getproperty(φ::SuParams, k::Symbol)
@@ -29,11 +29,8 @@ function Base.getproperty(φ::SuParams, k::Symbol)
     getfield(φ, :d)
   elseif k == :id
     getfield(φ, :id)
-  elseif k in keys(getfield(φ, :d))
-    ok(getfield(φ, :d)[k])
   else
-    ciid(ω -> k in keys(getfield(φ, :d)) ? ok(getfield(φ, :d)[k])(ω) : constant(missing)(ω))
-    # ciid(ω -> Base.invokelatest(getproperty, Base.invokelatest(apl, φ, ω), k))
+    ciid(ω -> k in keys(getfield(φ, :d)) ? aplifrv(getfield(φ, :d)[k], ω) : constant(missing)(ω))
   end
 end
 

@@ -92,8 +92,8 @@ function stringify(k, v)
   end
 end
 
-function linearstring(d::Dict, ks::Symbol...)
-  join([string(k, "_", d[k]) for k in ks], "_")
+function linearstring(d::AbstractDict, ks::Symbol...)
+  join([string(k, "=", d[k]) for k in ks], "_")
 end
 
 Base.show(io::IO, φ::Params) = show(io, φ.d)

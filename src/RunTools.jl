@@ -14,8 +14,6 @@ using Lens
 include("misc.jl")        # Miscellaneous
 include("generator.jl")   # Generators
 include("param.jl")       # Parameters
-include("suparam.jl")     # Super Parameters
-using .SuParameters
 
 include("optim/Optim.jl") # Generators
 include("git.jl")

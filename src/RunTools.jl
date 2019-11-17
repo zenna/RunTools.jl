@@ -9,16 +9,13 @@ using Omega
 using Random
 using Dates: now
 using Lens
-
+using SuParameters
 
 include("misc.jl")        # Miscellaneous
 include("generator.jl")   # Generators
-include("param.jl")       # Parameters
-
 include("optim/Optim.jl") # Generators
 include("git.jl")
 include("cmd.jl")         # Command Line Argument Parsing
-
 include("dispatch.jl")    # Dispatch Jobs
 
 export control,
@@ -26,8 +23,6 @@ export control,
        randrunname,
        logdir,
        datadir,
-       Params,
-       SuParams,
        current_commit,
        linearstring
 end

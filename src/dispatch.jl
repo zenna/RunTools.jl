@@ -11,6 +11,11 @@ end
 - `sim(φ)` Runs simulation taking parameters as input
 - `args`: run parameters (taken from cmdline with Agparse by default)
 - `φs`: iterable collection of parameters
+- 'runfile' : file which will actually be run
+Optional:
+- `tags` : some tags, for your own reference
+- 'name' : not sure
+- 'gitinfo' : just gets get info
 """
 function control(sim, φs, args = stdargs())
   sim_ = args.dryrun ? dry(sim) : sim
@@ -53,6 +58,11 @@ gencmd(runfile, simname, paramspath) =
 """
 Run (or schedule to run) `sim` with params `φ`
 
+`φ` should have the following fields:
+- logdir: path where all files will be stored
+- simname: name of function to be called with param
+- 
+
 - run `sim(opt)` locally non blocking in another process (if `runlocal==true`)
 - run `sim(opt)` locally in this process (if `runnow==true`)
 - schedule a job on slurm with sbatch (if `runsbatch==true`)
@@ -73,7 +83,7 @@ function dispatch(sim,
   saveparams_  = dryrun ? dry(saveparams) : saveparams
 
   mkpath_(logdir)    # Create logdir
-  paramspath = joinpath(φ.logdir, "$(φ.runname).jld2")    # Save the param file 
+  paramspath = joinpath(φ.logdir, "$(φ.runname).bson")    # Save the param file 
   outpath = joinpath(φ.logdir, "$(φ.runname).out")
   errpath = joinpath(φ.logdir, "$(φ.runname).err")
   simname = φ.simname
@@ -116,7 +126,7 @@ function queue(φs; maxpoolsize)
     end
 
     mkpath(φ.logdir)    # Create logdir
-    paramspath = joinpath(φ.logdir, "$(φ.runname).jld2")    # Save the param file 
+    paramspath = joinpath(φ.logdir, "$(φ.runname).bson")    # Save the param file 
     outpath = joinpath(φ.logdir, "$(φ.runname).out")
     errpath = joinpath(φ.logdir, "$(φ.runname).err")
     saveparams(φ, paramspath)

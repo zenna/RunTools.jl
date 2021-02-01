@@ -1,0 +1,8 @@
+name = "RunToolsExample"
+uuid = "6991ceda-d47c-470f-80b2-ac2d0af1ed5b"
+authors = ["Zenna Tavares <zennatavares@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+TensorBoardLogger = "899adc3e-224a-11e9-021f-63837185c80f"

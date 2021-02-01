@@ -6,8 +6,17 @@ function dry(f, verbose = true)
   end
 end
 
-"""Run `sim` now, queue `sim`, or `dispatch` depending on `φs`
+"""
+`control(sim, φs, args = stdargs())`
 
+Either: 
+1. Run `sim` now
+2. queue `sim`,
+3.`dispatch` depending on `φs`
+
+By default, this choice is determined by command line input
+
+# Arguments
 - `sim(φ)` Runs simulation taking parameters as input
 - `args`: run parameters (taken from cmdline with Agparse by default)
 - `φs`: iterable collection of parameters
@@ -15,13 +24,13 @@ end
 Optional:
 - `tags` : some tags, for your own reference
 - 'name' : not sure
-- 'gitinfo' : just gets get info
+- 'gitinfo' : just gets gitinfo
 """
 function control(sim, φs, args = stdargs())
   sim_ = args.dryrun ? dry(sim) : sim
   display(args)
   if args.dispatch
-    dispatch(sim, φs; sbatch = args.sbatch,
+    dispatchmany(sim, φs; sbatch = args.sbatch,
                       spawnlocal = args.spawnlocal,
                       dryrun = args.dryrun)
   elseif args.fromparams
@@ -37,8 +46,13 @@ function runnow(sim, args = stdargs())
   sim(φ)
 end
 
-"Dispatch many runs"
-function dispatch(sim, φs; ignoreexceptions = Exception[], kwargs...)
+"""
+Dispatch many runs
+
+# Arguments
+`ignoreexceptions` : If an exception is thrown and it is in this collection, we continue to the next run
+"""
+function dispatchmany(sim, φs; ignoreexceptions = Exception[], kwargs...)
   @showprogress 1 "Dispatching runs..." for φ in φs
     try
       dispatch(sim, φ; kwargs...)
@@ -56,20 +70,25 @@ gencmd(runfile, simname, paramspath) =
 
 
 """
-Run (or schedule to run) `sim` with params `φ`
+`dispatch(sim, φ)`
+Run (or schedule to run) `sim(φ)` in another process or using SLURM scheduler
+
+# Arguments
 
 `φ` should have the following fields:
-- logdir: path where all files will be stored
-- simname: name of function to be called with param
-- 
+- `logdir`: path where all files will be stored
+- `simname`: name of function to be called with param
+- `runfile`: file to be run
+- `runpath`: Path to Slurm specific bash script which will be scheduled 
+- `dryrun` -- a dry-run: will not actually execute `sim` but just print text
+- `runname` -- prefix used for files saved in logdir
 
 - run `sim(opt)` locally non blocking in another process (if `runlocal==true`)
 - run `sim(opt)` locally in this process (if `runnow==true`)
 - schedule a job on slurm with sbatch (if `runsbatch==true`)
 """
 function dispatch(sim,
-                  φ::Params;
-                  # runnow = false,
+                  φ;
                   sbatch = false,
                   spawnlocal = false,
                   runname = get(φ, :runname, "noname"),
@@ -99,19 +118,24 @@ function dispatch(sim,
   if spawnlocal
     cmd_ = gencmd(runfile, φ.simname, paramspath)
     cmd = pipeline(cmd_, stdout = outpath, stderr = errpath)
-    println("Running: ", cmd)
+    println("Running locally: ", cmd)
     run_(cmd)
   end
 end
+
 
 """
 `queue(φs; maxpoolsize)`
 
 Executes up to `maxpoolsize` number of jobs in queue, locally
 
-```jldoctest
-runcmds = [`echo hi \$i` & `sleep $(rand(1:3))` for i = 1:3]
-```
+Each φ::Φ in φs should havve defined:
+- `logdir`: where to log results, STDOUT, etc
+- `runfile`: Julia file to be executed
+- `simname`: name of the simulation function (e.g. `train`) within `runfile` that will be called
+
+`saveparams(::Φ, path)` should be defined
+`loadparams(::Φ, path)` should be defined`
 """
 function queue(φs; maxpoolsize)
   pool = []
@@ -138,11 +162,3 @@ function queue(φs; maxpoolsize)
     push!(pool, run(cmd; wait = false))
   end
 end
-
-# function queue(runcmds, stdout_, maxpoolsize)
-#   queue((pipeline(runcmd, stdout=stdout_)) for (runcmd, stdout_) in zip(runcmds, outfiles))
-# end
-
-# function queue(φs)
-#   saveparams_(φ, paramspath)
-# end

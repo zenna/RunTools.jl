@@ -1,18 +1,26 @@
-# Run.jl
+# RunTools.jl
 
 Tools for running simulations at scale
 
 - Hyper Parameter Sweeping
 - Interaction with Slurm
 
-# Usage
+## Usage
 
 - Define a `Param`s
+
 ```julia
 module MyModule
+using Random
 
-using SuParameters
-p = Params(niterations = 10)
+mutable struct Params
+  niterations::Int
+  verbose::Bool
+end
+
+function f(rng)
+  rand(rng)
+end
 ```
 
 - Define a simulation function which takes a paramter value as its single argument
@@ -43,28 +51,5 @@ function hyper(; params = Params(), n = 10)
   paramsamples = rand(params_, n)
   display.(paramsamples)
   control(infer, paramsamples)
-end
-```
-
-Run from cmdline with: julia -L hyper.jl -E 'hyper(; params = Params(tags = [:leak]))' -- --queue
-
-
-
-The main function called here is `control`
-
-```julia
-"""Run `sim` now, queue `sim`, or `dispatch` depending on `φs`
-
-- `sim(φ)` Runs simulation taking parameters as input
-- `args`: run parameters (taken from cmdline with Agparse by default)
-- `φs`: iterable collection of parameters
-- 'runfile' : file which will actually be run
-Optional:
-- `tags` : some tags, for your own reference
-- 'name' : not sure
-- 'gitinfo' : just gets get info
-"""
-function control(sim, φs, args = stdargs())
-  ...
 end
 ```

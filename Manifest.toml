@@ -488,14 +488,6 @@ git-tree-sha1 = "67745a79d8e83a83737a7e17a383c54720a97f41"
 uuid = "4c63d2b9-4356-54db-8cca-17b64c39e42c"
 version = "0.9.0"
 
-[[SuParameters]]
-deps = ["JLD2", "Omega"]
-git-tree-sha1 = "819516f50189e49b597070ae73211e7d3ce49fd9"
-repo-rev = "master"
-repo-url = "https://github.com/zenna/Suparameters.jl"
-uuid = "dd363196-7feb-11e9-1f4f-d309144a6292"
-version = "0.1.0"
-
 [[SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
 uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"

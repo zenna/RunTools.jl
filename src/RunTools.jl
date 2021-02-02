@@ -9,6 +9,7 @@ using Omega
 using Random
 using Dates: now
 using Lens
+using SuParameters
 
 include("misc.jl")        # Miscellaneous
 include("generator.jl")   # Generators

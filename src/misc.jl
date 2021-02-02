@@ -3,7 +3,9 @@ function datadir()
   if "DATADIR" in keys(ENV)
     ENV["DATADIR"]
   else
-    homedir()
+    path = homedir()
+    println("Environment variable DATADIR not set, using $path")
+    return path
   end
 end
 
